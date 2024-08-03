@@ -62,22 +62,44 @@ router.put('/:id', protect, async (req, res) => {
 });
 
 
+// router.delete('/:id', protect, async (req, res) => {
+//   if (req.user.role !== 'admin') {
+//     return res.status(403).json({ message: 'Access denied' });
+//   }
+
+//   try {
+//     const car = await Car.findById(req.params.id);
+//     if (!car) {
+//       return res.status(404).json({ message: 'Car not found' });
+//     }
+
+//     await car.remove();
+//     res.json({ message: 'Car removed' });
+//   } catch (error) {
+//     res.status(500).json({ message: error.message });
+//   }
+// });
+
 router.delete('/:id', protect, async (req, res) => {
   if (req.user.role !== 'admin') {
-    return res.status(403).json({ message: 'Access denied' });
+      return res.status(403).json({ message: 'Access denied' });
   }
 
   try {
-    const car = await Car.findById(req.params.id);
-    if (!car) {
-      return res.status(404).json({ message: 'Car not found' });
-    }
+      const car = await Car.findById(req.params.id);
+      console.log('Car object:', car); // Log the car object
 
-    await car.remove();
-    res.json({ message: 'Car removed' });
+      if (!car) {
+          return res.status(404).json({ message: 'Car not found' });
+      }
+
+      await Car.deleteOne({ _id: req.params.id });
+      res.json({ message: 'Car removed' });
   } catch (error) {
-    res.status(500).json({ message: error.message });
+      console.error('Error removing car:', error.message);
+      res.status(500).json({ message: error.message });
   }
 });
+
 
 module.exports = router;
