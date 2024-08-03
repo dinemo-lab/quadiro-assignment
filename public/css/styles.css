@@ -107,3 +107,85 @@ a:hover {
 #car-list ul li:hover, #user-cars li:hover {
     background-color: #bdc3c7;
 }
+
+/* Admin Section */
+#admin-section {
+    padding: 20px;
+}
+
+#car-management {
+    margin-bottom: 20px;
+}
+
+#car-list {
+    margin-top: 20px;
+}
+
+#car-list ul {
+    list-style-type: none;
+    padding: 0;
+}
+
+#car-list li {
+    margin-bottom: 10px;
+    padding: 10px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+#car-list .actions {
+    display: flex;
+    gap: 10px;
+}
+
+#car-list .actions button {
+    background: none;
+    border: none;
+    cursor: pointer;
+}
+
+#car-list .actions .edit-icon {
+    color: #007bff;
+}
+
+#car-list .actions .delete-icon {
+    color: #dc3545;
+}
+
+/* Update Car Form */
+#update-car-section {
+    padding: 20px;
+}
+
+#update-car-form {
+    display: flex;
+    flex-direction: column;
+}
+
+#update-car-form label {
+    margin-bottom: 5px;
+}
+
+#update-car-form input {
+    margin-bottom: 10px;
+    padding: 8px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+}
+
+#update-car-form button {
+    padding: 10px;
+    background-color: #007bff;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+}
+
+#update-car-form button:hover {
+    background-color: #0056b3;
+}
+

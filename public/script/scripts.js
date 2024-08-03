@@ -158,42 +158,19 @@ document.getElementById('car-form').addEventListener('submit', async function(e)
 
 
 
+// Existing code ...
 
+// Function to handle edit car
+function editCar(id, name, year, price) {
+    document.getElementById('update-car-id').value = id;
+    document.getElementById('update-car-name').value = name;
+    document.getElementById('update-car-year').value = year;
+    document.getElementById('update-car-price').value = price;
+    document.getElementById('update-car-section').style.display = 'block';
+}
 
-document.getElementById('update-car-form').addEventListener('submit', async function(e) {
-    e.preventDefault();
-
-    const id = document.getElementById('update-car-id').value;
-    const name = document.getElementById('update-car-name').value;
-    const manufacturingYear = document.getElementById('update-car-year').value;
-    const price = document.getElementById('update-car-price').value;
-
-    const response = await fetch(`/api/cars/${id}`, {
-        method: 'PUT',
-        headers: {
-            'Content-Type': 'application/json',
-            'Authorization': `Bearer ${localStorage.getItem('token')}`
-        },
-        body: JSON.stringify({ name, manufacturingYear, price })
-    });
-
-    if (response.ok) {
-        document.getElementById('update-car-id').value = '';
-        document.getElementById('update-car-name').value = '';
-        document.getElementById('update-car-year').value = '';
-        document.getElementById('update-car-price').value = '';
-        await loadCars();
-    } else {
-        alert('Failed to update car. Please try again.');
-    }
-});
-
-// Delete Car
-document.getElementById('delete-car-form').addEventListener('submit', async function(e) {
-    e.preventDefault();
-
-    const id = document.getElementById('delete-car-id').value;
-
+// Function to handle delete car
+async function deleteCar(id) {
     const response = await fetch(`/api/cars/${id}`, {
         method: 'DELETE',
         headers: {
@@ -202,9 +179,90 @@ document.getElementById('delete-car-form').addEventListener('submit', async func
     });
 
     if (response.ok) {
-        document.getElementById('delete-car-id').value = '';
         await loadCars();
     } else {
         alert('Failed to delete car. Please try again.');
     }
+}
+
+// Update car form submission
+document.getElementById('update-car-form').addEventListener('submit', async function(e) {
+    e.preventDefault();
+
+    const id = document.getElementById('update-car-id').value;
+    const name = document.getElementById('update-car-name').value;
+    const year = document.getElementById('update-car-year').value;
+    const price = document.getElementById('update-car-price').value;
+
+    const response = await fetch(`/api/cars/${id}`, {
+        method: 'PUT',
+        headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${localStorage.getItem('token')}`
+        },
+        body: JSON.stringify({ name, manufacturingYear: year, price })
+    });
+
+    if (response.ok) {
+        document.getElementById('update-car-section').style.display = 'none';
+        await loadCars();
+    } else {
+        alert('Failed to update car. Please try again.');
+    }
 });
+
+// Load cars and add event listeners for edit and delete
+async function loadCars() {
+    try {
+        const response = await fetch('/api/cars', {
+            headers: {
+                'Authorization': `Bearer ${localStorage.getItem('token')}`
+            }
+        });
+
+        if (!response.ok) {
+            throw new Error('Network response was not ok.');
+        }
+
+        const data = await response.json();
+        const cars = data.cars; 
+
+        if (!Array.isArray(cars)) {
+            throw new Error('Expected "cars" to be an array.');
+        }
+
+        if (localStorage.getItem('role') === 'admin') {
+            const carList = document.getElementById('cars');
+            carList.innerHTML = '';
+
+            cars.forEach(car => {
+                const li = document.createElement('li');
+                li.innerHTML =  `${car.name} (${car.manufacturingYear}) - $${car.price}
+                    <div class="actions">
+                        <button class="edit-icon" onclick="editCar('${car._id}', '${car.name}', ${car.manufacturingYear}, ${car.price})">
+                            ✎
+                        </button>
+                        <button class="delete-icon" onclick="deleteCar('${car._id}')">
+                            🗑
+                        </button>
+                    </div>`;
+                carList.appendChild(li);
+            });
+
+            document.getElementById('total-cars').innerText = data.totalCars;
+        } else {
+            const userCarList = document.getElementById('user-cars');
+            userCarList.innerHTML = '';
+
+            cars.forEach(car => {
+                const li = document.createElement('li');
+                li.textContent = `${car.name} (${car.manufacturingYear}) - $${car.price}`;
+                userCarList.appendChild(li);
+            });
+        }
+    } catch (error) {
+        console.error('Error loading cars:', error);
+    }
+}
+
+
