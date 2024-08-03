@@ -1,13 +1,12 @@
-const express = require('express');
-const Car = require('../models/Car');
-const { protect } = require('../middlewares/authMiddleware');
+const express = require("express");
+const Car = require("../models/Car");
+const { protect } = require("../middlewares/authMiddleware");
 
 const router = express.Router();
 
-
-router.post('/', protect, async (req, res) => {
-  if (req.user.role !== 'admin') {
-    return res.status(403).json({ message: 'Access denied' });
+router.post("/", protect, async (req, res) => {
+  if (req.user.role !== "admin") {
+    return res.status(403).json({ message: "Access denied" });
   }
 
   const { name, manufacturingYear, price } = req.body;
@@ -21,33 +20,25 @@ router.post('/', protect, async (req, res) => {
   }
 });
 
+router.get("/", protect, async (req, res) => {
+  try {
+    const cars = await Car.find({});
+    const totalCars = cars.length;
+    res.json({ totalCars, cars });
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+});
 
-router.get('/', protect, async (req, res) => {
-    try {
-      const cars = await Car.find({});
-      const totalCars = cars.length;
-      res.json({ totalCars, cars });
-    } catch (error) {
-      res.status(500).json({ message: error.message });
-    }
-  });
-  
-
-
-
-
-
-
-
-router.put('/:id', protect, async (req, res) => {
-  if (req.user.role !== 'admin') {
-    return res.status(403).json({ message: 'Access denied' });
+router.put("/:id", protect, async (req, res) => {
+  if (req.user.role !== "admin") {
+    return res.status(403).json({ message: "Access denied" });
   }
 
   try {
     const car = await Car.findById(req.params.id);
     if (!car) {
-      return res.status(404).json({ message: 'Car not found' });
+      return res.status(404).json({ message: "Car not found" });
     }
 
     car.name = req.body.name || car.name;
@@ -61,45 +52,24 @@ router.put('/:id', protect, async (req, res) => {
   }
 });
 
-
-// router.delete('/:id', protect, async (req, res) => {
-//   if (req.user.role !== 'admin') {
-//     return res.status(403).json({ message: 'Access denied' });
-//   }
-
-//   try {
-//     const car = await Car.findById(req.params.id);
-//     if (!car) {
-//       return res.status(404).json({ message: 'Car not found' });
-//     }
-
-//     await car.remove();
-//     res.json({ message: 'Car removed' });
-//   } catch (error) {
-//     res.status(500).json({ message: error.message });
-//   }
-// });
-
-router.delete('/:id', protect, async (req, res) => {
-  if (req.user.role !== 'admin') {
-      return res.status(403).json({ message: 'Access denied' });
+router.delete("/:id", protect, async (req, res) => {
+  if (req.user.role !== "admin") {
+    return res.status(403).json({ message: "Access denied" });
   }
 
   try {
-      const car = await Car.findById(req.params.id);
-      console.log('Car object:', car); // Log the car object
+    const car = await Car.findById(req.params.id);
 
-      if (!car) {
-          return res.status(404).json({ message: 'Car not found' });
-      }
+    if (!car) {
+      return res.status(404).json({ message: "Car not found" });
+    }
 
-      await Car.deleteOne({ _id: req.params.id });
-      res.json({ message: 'Car removed' });
+    await Car.deleteOne({ _id: req.params.id });
+    res.json({ message: "Car removed" });
   } catch (error) {
-      console.error('Error removing car:', error.message);
-      res.status(500).json({ message: error.message });
+    console.error("Error removing car:", error.message);
+    res.status(500).json({ message: error.message });
   }
 });
-
 
 module.exports = router;
