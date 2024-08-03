@@ -155,3 +155,56 @@ document.getElementById('car-form').addEventListener('submit', async function(e)
         alert('Failed to add car. Please try again.');
     }
 });
+
+
+
+
+
+document.getElementById('update-car-form').addEventListener('submit', async function(e) {
+    e.preventDefault();
+
+    const id = document.getElementById('update-car-id').value;
+    const name = document.getElementById('update-car-name').value;
+    const manufacturingYear = document.getElementById('update-car-year').value;
+    const price = document.getElementById('update-car-price').value;
+
+    const response = await fetch(`/api/cars/${id}`, {
+        method: 'PUT',
+        headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${localStorage.getItem('token')}`
+        },
+        body: JSON.stringify({ name, manufacturingYear, price })
+    });
+
+    if (response.ok) {
+        document.getElementById('update-car-id').value = '';
+        document.getElementById('update-car-name').value = '';
+        document.getElementById('update-car-year').value = '';
+        document.getElementById('update-car-price').value = '';
+        await loadCars();
+    } else {
+        alert('Failed to update car. Please try again.');
+    }
+});
+
+// Delete Car
+document.getElementById('delete-car-form').addEventListener('submit', async function(e) {
+    e.preventDefault();
+
+    const id = document.getElementById('delete-car-id').value;
+
+    const response = await fetch(`/api/cars/${id}`, {
+        method: 'DELETE',
+        headers: {
+            'Authorization': `Bearer ${localStorage.getItem('token')}`
+        }
+    });
+
+    if (response.ok) {
+        document.getElementById('delete-car-id').value = '';
+        await loadCars();
+    } else {
+        alert('Failed to delete car. Please try again.');
+    }
+});

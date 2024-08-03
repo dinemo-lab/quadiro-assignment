@@ -44,7 +44,7 @@
     </div>
 
     <!-- Admin Section -->
-    <div id="admin-section" style="display:none;">
+    <!-- <div id="admin-section" style="display:none;">
         <h2>Admin Dashboard</h2>
         <p>Total Cars: <span id="total-cars">0</span></p>
         <div id="car-management">
@@ -63,7 +63,48 @@
                 <ul id="cars"></ul>
             </div>
         </div>
+    </div> -->
+
+    <!-- Admin Section -->
+<div id="admin-section" style="display:none;">
+    <h2>Admin Dashboard</h2>
+    <p>Total Cars: <span id="total-cars">0</span></p>
+    <div id="car-management">
+        <h3>Manage Cars</h3>
+        <form id="car-form">
+            <label for="car-name">Car Name:</label>
+            <input type="text" id="car-name" required>
+            <label for="car-year">Manufacturing Year:</label>
+            <input type="number" id="car-year" required>
+            <label for="car-price">Price:</label>
+            <input type="number" id="car-price" required>
+            <button type="submit">Add Car</button>
+        </form>
+        <h3>Update Car</h3>
+        <form id="update-car-form">
+            <label for="update-car-id">Car ID:</label>
+            <input type="text" id="update-car-id" required>
+            <label for="update-car-name">Car Name:</label>
+            <input type="text" id="update-car-name">
+            <label for="update-car-year">Manufacturing Year:</label>
+            <input type="number" id="update-car-year">
+            <label for="update-car-price">Price:</label>
+            <input type="number" id="update-car-price">
+            <button type="submit">Update Car</button>
+        </form>
+        <h3>Delete Car</h3>
+        <form id="delete-car-form">
+            <label for="delete-car-id">Car ID:</label>
+            <input type="text" id="delete-car-id" required>
+            <button type="submit">Delete Car</button>
+        </form>
+        <div id="car-list">
+            <h3>Car List</h3>
+            <ul id="cars"></ul>
+        </div>
     </div>
+</div>
+
 
     <!-- User Section -->
     <div id="user-section" style="display:none;">
